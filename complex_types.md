@@ -56,8 +56,53 @@ Currently there are no such value types.
 
 The following section describe some compound data types, that be can made by combining base data types.
 
-### Array
+### Dimensions
 
+A value consisting more than one scalar value can be described using several dimension.
+
+All dimensions are described within an array. We use an array instead of 
+an object to have a fixed order. 
+
+Each dimension has its own value type.
+
+
+~~~~ {.javascript}
+
+{
+  "dataType": "dimensions",
+  "dimensions": [
+  {
+    "comment": <string>,
+    "name": <string>,
+    "dataType": <string>,
+    "unit" : <unit object>
+    "rule": <rule name>,
+    <rule name> : { ... }
+    "count": <number>
+  },
+  ...,
+  {
+    "comment": <string>,
+    "name": <string>,
+    "dataType": <string>,
+    "unit" : <unit object>
+    "rule": <rule name>,
+    <rule name> : { ... }
+    "count": <number>
+  },
+  "count": <number>
+}
+~~~~
+
+`dimensions[]/comment`: A free comment describing the dimension
+`dimensions[]/name`: Name of the dimension (i.e. voltage, frequency)
+`dimensions[]/dataType`: Any base value type (i.e. int32)
+`dimensions[]/rule>`: Name of the rule for the dimension (i.e. explicit, linear)
+`dimensions[]/<rule name>`: Object describing the rule. Absent for explicit rule!
+`dimensions[]/count`: (optional) Each dimension can have a count m, Meaning that each each dimension element has m occurences of its value type.
+`count`: (optional) The whole dimensions array can have a count n, Meaning that there are n occurences of each dimension element.
+
+### Array
 
 An array of values of the same type. The number of elements is fixed.
 
@@ -95,9 +140,48 @@ A combination of named members which may be of different types.
 - `<value type n>`: The type of each struct member. The type can be a base type (e.g. uint32), or one f the compound types (e.g. array, struct, spectrum...)
 - 
 
-### Spectrum
+### Spectrum Desribed with Dimensions
 
-Spectral values over a range in the spectral domain. The spectral domain follows an implicit rule
+We use 2 dimesionsions. In addition we introduce the functiontype which helps the client to inteprete the data.
+
+~~~~ {.javascript}
+{
+  "name": "the spectrum",
+  "functionType": "spectrum",
+  "dataType": "dimensions",
+  "dimensions": [
+    {
+      "comment": "domain axis",
+      "name": "frequency",
+      "dataType": "double",
+      "unit": "Hz",
+      "rule": "linear",
+      "linear": {
+        "delta": 10,
+        "start": 100
+      }
+    },
+    {
+      "comment": "value dimension",
+      "name": "sound pressure",
+      "dataType": "double",
+      "unit": "dB",
+      "rule": "explicit"
+    }
+  ],
+  "count": 100
+}
+~~~~
+
+`dimensions[0]`: Frequency following an implicit rule.
+`dimensions[1]`: The sound pressure with as explicit values
+
+Only `dimensions[1]` is explicit, hence there are 100 double values to be transferred together with a time stamp.
+
+
+### Spectrum As Complex Type
+
+Spectral values over a range in the spectral domain. The spectral domain follows an implicit rule.
 
 ~~~~ {.javascript}
 {
@@ -127,11 +211,11 @@ Spectral values over a range in the spectral domain. The spectral domain follows
 - `domain`: Describing the range in the spectral domain (i.e. frequency)
 - `count`: Number of points in the spectrum
 
+Only `value` is explicit, hence there are 100 double values to be transferred together with a time stamp.
+
 #### Generic Alternative
 
 Here we combine array, struct and base types. There are no complex value types, only a combination of the mentioned types!
-
-In addition we introduce the functiontype which helps the client to inteprete the data.
 
 ~~~~ {.javascript}
 {
@@ -166,7 +250,7 @@ In addition we introduce the functiontype which helps the client to inteprete th
 - `value`: Describes the measured values (i.e. amplitude, attenuation).
 - `domain`: Describes the range in the spectral domain (i.e. frequency)
 
-Only `values` are explicit, hence this is the data to be transferred.
+Only `value` is explicit, hence there are 100 double values to be transferred together with a time stamp.
 
 ### Histogram {#Histogram}
 
