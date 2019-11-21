@@ -140,6 +140,8 @@ A combination of named members which may be of different types.
 - `<value type n>`: The type of each struct member. The type can be a base type (e.g. uint32), or one f the compound types (e.g. array, struct, spectrum...)
 - 
 
+\newpage
+
 ### Spectrum Desribed with Dimensions
 
 We use 2 dimensions. In addition we introduce the functiontype which helps the client to interprete the data.
