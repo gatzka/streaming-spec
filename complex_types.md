@@ -142,7 +142,7 @@ A combination of named members which may be of different types.
 
 ### Spectrum Desribed with Dimensions
 
-We use 2 dimesionsions. In addition we introduce the functiontype which helps the client to inteprete the data.
+We use 2 dimensions. In addition we introduce the functiontype which helps the client to interprete the data.
 
 ~~~~ {.javascript}
 {
@@ -252,7 +252,45 @@ Here we combine array, struct and base types. There are no complex value types, 
 
 Only `value` is explicit, hence there are 100 double values to be transferred together with a time stamp.
 
-### Histogram {#Histogram}
+### Histogram Desribed with Dimensions
+
+We use 2 dimensions. In addition we introduce the functiontype which helps the client to interprete the data.
+
+~~~~ {.javascript}
+{
+  "name": "the histogram",
+  "functionType": "histogram",
+  "dataType": "dimensions",
+  "dimensions": [
+    {
+      "comment": "histogram classes",
+      "name": "frequency",
+      "dataType": "double",
+      "unit": "Hz",
+      "rule": "linear",
+      "linear": {
+        "delta": 10.0,
+        "start": 100.0
+      }      
+    },
+    {
+      "comment": "class counters",
+      "name": "count",
+      "dataType": "uint64",
+      "rule": "explicit"
+    }
+  ],
+  "count": 50
+}
+~~~~
+
+`dimensions[0]`: The histogram classes or bins over the frequency following an implicit rule.
+`dimensions[1]`: The explicit class counter values
+
+Only `dimensions[1]` is explicit, hence there are 50 uint64 values to be transferred together with a time stamp.
+
+
+### Histogram As Complex Type {#Histogram}
 
 This is an example of such a complex value type. It is used for statistics.
 
